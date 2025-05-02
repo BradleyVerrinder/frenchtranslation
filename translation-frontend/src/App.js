@@ -13,7 +13,7 @@ function App() {
     const handleWordClick = async (word, index) => {
         const key = `${word}-${index}`;
         if (translations[key]) {
-            setOpenTooltips({ ...openTooltips, [key]: true });
+            setOpenTooltips({ [key]: true });
             return;
         }
     
@@ -23,7 +23,7 @@ function App() {
             const translatedText = data.responseData.translatedText;
     
             setTranslations({ ...translations, [key]: translatedText });
-            setOpenTooltips({ ...openTooltips, [key]: true });
+            setOpenTooltips({ [key]: true });
         } catch (err) {
             console.error("Translation error:", err);
             setTranslations({ ...translations, [key]: "Error" });
