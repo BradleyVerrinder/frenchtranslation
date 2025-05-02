@@ -11,21 +11,23 @@ function App() {
 
     // Handle word click to show tooltip and fetch translation
     const handleWordClick = async (word, index) => {
-        const key = `${word}-${index}`; // Unique key per word occurrence
+        const key = `${word}-${index}`;
         if (translations[key]) {
             setOpenTooltips({ ...openTooltips, [key]: true });
             return;
         }
-
-        const res = await fetch("http://127.0.0.1:8000/api/translate/", {
-            method: "POST",
-            body: JSON.stringify({ word }),
-            headers: { "Content-Type": "application/json" },
-        });
-
-        const data = await res.json();
-        setTranslations({ ...translations, [key]: data.translatedText });
-        setOpenTooltips({ ...openTooltips, [key]: true });
+    
+        try {
+            const res = await fetch("https://api.mymemory.translated.net/get?q=" + word + "&langpair=fr|en");
+            const data = await res.json();
+            const translatedText = data.responseData.translatedText;
+    
+            setTranslations({ ...translations, [key]: translatedText });
+            setOpenTooltips({ ...openTooltips, [key]: true });
+        } catch (err) {
+            console.error("Translation error:", err);
+            setTranslations({ ...translations, [key]: "Error" });
+        }
     };
 
     // Handle text input from user
